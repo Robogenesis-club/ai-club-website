@@ -1,0 +1,37 @@
+<?php
+session_start();
+
+include 'config.php';
+// using $conn_member for member DB
+header('Content-Type: application/json');
+
+if (!isset($_SESSION['user_email'])) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+    exit();
+}
+
+if (!isset($_POST['id'])) {
+    echo json_encode(['success' => false, 'message' => 'Missing ID']);
+    exit();
+}
+
+$bennettid = $_POST['id'];
+
+$conn = new mysqli("localhost", "root", "", "member");
+if ($conn->connect_error) {
+    echo json_encode(['success' => false, 'message' => 'DB connection failed']);
+    exit();
+}
+
+$stmt = $conn_member->prepare("DELETE FROM personal WHERE bennettid = ?");
+$stmt->bind_param("s", $bennettid);
+
+if ($stmt->execute()) {
+    echo json_encode(['success' => true]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Failed to delete']);
+}
+
+$stmt->close();
+$conn_member->close();
+?>

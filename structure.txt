@@ -1,0 +1,28 @@
+project/
+├── assets/
+│   ├── images/
+│   │   ├── assistant_dean.jpg
+│   │   ├── club-logo.png
+│   │   ├── dean.jpg
+│   │   ├── jiwak.jpeg
+│   │   ├── kshitij.png
+│   │   ├── Priyanshi.jpeg
+│   │   ├── prof_navneet.jpg
+│   │   ├── prof_prateek.jpg
+│   │   ├── school-logo.png
+│   │   ├── university-logo.png
+│   │   ├── utkrisht.jpeg
+│   │   ├── vash.jpeg
+│   │   └── ansh.jpeg
+│   └── js/
+│       └── main.js
+├── css/
+│   └── style.css
+├── includes/
+│   ├── header.php
+│   ├── top-logos.php
+│   └── footer.php
+├── application.php
+├── index.php
+├── login.php
+└── submit_application.php

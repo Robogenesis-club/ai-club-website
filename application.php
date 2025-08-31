@@ -1,0 +1,137 @@
+<?php
+include 'config.php'; // This now handles both $conn and $conn_member
+
+if (!isset($conn_member) || !$conn_member) {
+    error_log('robophp: $conn_member is null in application.php');
+    echo '<p>Member DB not connected. Please create the member DB and import SQL.</p>'; exit();
+}
+include 'includes/header.php';
+$title = 'RoboGenesis Club - Student Intake Form';
+
+// No need to include 'connection.php' here anymore as config.php handles it.
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Escape inputs using DB connection
+    $name = mysqli_real_escape_string($conn_member, $_POST['name']);
+    $bennettid = mysqli_real_escape_string($conn_member, $_POST['bennett-id']);
+    $number = mysqli_real_escape_string($conn_member, $_POST['contact']); // keep as string
+    $accomodation = mysqli_real_escape_string($conn_member, $_POST['accommodation'] ?? '');
+
+    // Insert into personal table
+    $sql = "INSERT INTO personal (Name, bennettid, number, accomodation) VALUES (?, ?, ?, ?)";
+    $stmt = $conn_member->prepare($sql);
+
+    if ($stmt) {
+        $stmt->bind_param("ssss", $name, $bennettid, $number, $accomodation);
+        if ($stmt->execute()) {
+            // Use JavaScript to show modal and then redirect
+            echo "<script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.getElementById('success-modal').style.display = 'flex';
+                    });
+                  </script>";
+        } else {
+            echo "<script>alert('Error submitting application: " . addslashes($stmt->error) . "');</script>";
+        }
+        $stmt->close();
+    } else {
+        echo "<script>alert('Prepare statement failed: " . addslashes($conn_member->error) . "');</script>";
+    }
+}
+?>
+
+<!-- HTML content remains the same -->
+<div class="main-content">
+    <div class="intake-container">
+        <div class="form-header">
+            <h2>RoboGenesis Club Membership</h2>
+            <p>Join our community of AI and robotics enthusiasts</p>
+        </div>
+
+        <form id="intake-form" method="POST">
+            <div class="form-group">
+                <label for="name" class="required">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bennett-id" class="required">Bennett ID</label>
+                <input type="text" id="bennett-id" name="bennett-id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact" class="required">Contact Number</label>
+                <input type="tel" id="contact" name="contact" required>
+            </div>
+
+            <div class="form-group">
+                <label for="accommodation">Accommodation Type <span class="optional-note">(optional)</span></label>
+                <select id="accommodation" name="accommodation">
+                    <option value="">Select accommodation type</option>
+                    <option value="hosteller">Hosteller</option>
+                    <option value="dayscholar">Dayscholar</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">
+                Submit Application <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>Your information will be kept confidential and used only for club purposes.</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="success-modal">
+    <div class="modal-content">
+        <div class="modal-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h3>Application Submitted Successfully!</h3>
+        <p>Thank you for applying to the RoboGenesis Club. We will contact you soon.</p>
+        <button class="modal-btn" onclick="closeModal()">OK</button>
+    </div>
+</div>
+
+<div class="footer">
+    <p>© 2025 RoboGenesis, School of AI, Bennett University</p>
+</div>
+
+<style>
+    body {
+        background-image: url('https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100vh;
+        min-height: 100%; /* Ensures full height even with content */
+        display: flex; /* Replaced inline-block for proper centering */
+        align-items: center; /* Centers content vertically */
+        justify-content: center; /* Centers content horizontally */
+        position: relative;
+        margin: 0; /* Remove default margins */
+    }
+    /* Optional: Add a semi-transparent overlay to improve text readability */
+    .main-content {
+        position: relative;
+        background: rgba(10, 11, 16, 0.9); /* Matches --bg with some transparency */
+        padding: 0.6px;
+        border-radius: var(--radius-lg);
+    }
+</style>
+
+<script>
+function closeModal() {
+    document.getElementById('success-modal').style.display = 'none';
+    window.location.href = 'index.php'; // Redirect after closing modal
+}
+
+window.addEventListener('click', function(event) {
+    if (event.target === document.getElementById('success-modal')) {
+        closeModal();
+    }
+});
+</script>

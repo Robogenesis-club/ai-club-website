@@ -1,0 +1,375 @@
+<?php
+include 'config.php'; // This now handles session_start() and both $conn and $conn_member
+$title = 'RoboGenesis | We Build';
+
+if (!isset($conn) || !$conn) {
+    error_log('robophp: $conn is null in index.php');
+    echo '<p>Database not connected. Check config.php and import the SQL.</p>'; exit();
+}
+$message = '';
+
+// The original index.php had a login form. If you intend for users to log in from index.php,
+// you need to handle that logic here. However, your login.php already handles login.
+// I'm assuming the POST request handling in index.php was a remnant or for a different login.
+// If you want to keep a login form on index.php, you should use prepared statements for security.
+// For now, I'm removing the POST handling from index.php to avoid confusion with login.php.
+// If you need it, let me know, and I'll add it back securely.
+
+// Original POST handling (commented out to avoid redundancy with login.php)
+/*
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM users WHERE email = '$email'"; // This should be a prepared statement
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['full_name'];
+            header("Location: index.php"); // Redirect to self after successful login
+            exit();
+        } else {
+            $message = 'Invalid password';
+        }
+    } else {
+        $message = 'Invalid email';
+    }
+}
+*/
+
+include 'includes/header.php';
+?>
+
+<!-- HTML content remains the same -->
+<div class="orbs" aria-hidden="true">
+    <div class="orb" style="left:12%; top:12%"></div>
+    <div class="orb alt" style="left:84%; top:30%"></div>
+    <div class="orb" style="left:22%; top:78%"></div>
+</div>
+<div class="top-logos">
+    <img src="assests/images/university-logo.png" alt="University Logo">
+    <img src="assests/images/school-logo.png" alt="School Logo">
+    <img src="assests/images/club-logo.png" alt="Club Logo">
+</div>
+
+<header class="nav">
+    <div class="container nav-inner">
+        <div class="brand">
+            <span class="logo-mark" aria-hidden="true"></span>
+            <span>RoboGenesis</span>
+        </div>
+
+        <nav class="nav-links" aria-label="Primary">
+            <a href="#home" class="active">Home</a>
+            <a href="#mentors">Mentors</a>
+            <a href="#vision">Vision</a>
+            <a href="#pillars">Pillars</a>
+            <a href="#objectives">Objectives</a>
+            <a href="#projects">Projects</a>
+            <a href="#events">Events</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#team">Team</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-cta">
+            <a class="cta-min" href="#membership" aria-label="Join RoboGenesis">
+                Join Now <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <?php if (!isset($_SESSION['user_email'])): // Check for user_email from login.php ?>
+                <a class="cta-min login-btn" href="login.php" aria-label="Login to RoboGenesis">
+                    Login <i class="fa-solid fa-sign-in-alt"></i>
+                </a>
+            <?php else: ?>
+                <a class="cta-min" href="logout.php" aria-label="Logout">
+                    Logout <i class="fa-solid fa-sign-out-alt"></i>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="hero" tabindex="-1">
+    <div class="hero-content container">
+        <span class="badge">We Build</span>
+        <h1>RoboGenesis Club</h1>
+        <p>AI-powered robotics for the next generation. Turning theory into intelligent systems — we build, ship & compete.</p>
+        <div class="hero-cta">
+            <a class="btn primary" href="#mentors">Meet Our Mentors</a>
+            <a class="btn ghost" href="#pillars">Our Pillars</a>
+        </div>
+    </div>
+</section>
+
+<!-- MENTORS -->
+<section id="mentors" class="section" aria-label="Mentors & Advisors">
+    <div class="container">
+        <h2>Our Mentors</h2>
+        <div class="mentor-dean" data-aos="fade-up">
+            <div class="dean-card">
+                <div class="dean-left">
+                    <img src="assests/images/dean.jpg" alt="Dr. Rajiv Tiwari - Dean" onerror="this.src='https://placehold.co/360x360/png?text=Dean'">
+                </div>
+                <div class="dean-right">
+                    <h3>Dr. Rajeev Tiwari</h3>
+                    <p class="mentor-title">Dean, School of AI</p>
+                    <p class="mentor-vision" id="dean-vision">"To architect the future through Artificial Intelligence by empowering students to become active innovators and leaders in the AI-driven world. We aim to provide a globally-aligned, industry-integrated education that blends cutting-edge AI/ML technologies, experiential learning, entrepreneurship, and ethical leadership—preparing our students to shape industries, drive innovation, and contribute to a smart, future-ready society."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mentor-row" data-aos="fade-up" data-aos-delay="80">
+            <article class="mentor-card">
+                <div class="mentor-avatar"><img src="assests/images/assistant_dean.jpg" alt="Dr. Pratyush Pranav" onerror="this.src='https://placehold.co/240x240/png?text=Assistant+Dean'"></div>
+                <h3 class="mentor-name">Dr. Pratyush Pranav</h3>
+                <p class="mentor-title">Assistant Dean, School of AI</p>
+            </article>
+            <article class="mentor-card">
+                <div class="mentor-avatar"><img src="assests/images/prof_navneet.jpg" alt="Dr. Navneet Pratap Singh" onerror="this.src='https://placehold.co/240x240/png?text=Professor'"></div>
+                <h3 class="mentor-name">Dr. Navneet Pratap Singh</h3>
+                <p class="mentor-title">Assistant Professor, School of AI</p>
+            </article>
+            <article class="mentor-card">
+                <div class="mentor-avatar"><img src="assests/images/prof_prateek.jpg" alt="Dr. Prateek Yadav" onerror="this.src='https://placehold.co/240x240/png?text=Professor'"></div>
+                <h3 class="mentor-name">Dr. Prateek Yadav</h3>
+                <p class="mentor-title">Assistant Professor, School of AI</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- VISION -->
+<section id="vision" class="section container" data-aos="fade-up">
+    <h2>Vision & Motto</h2>
+    <p class="motto">"<strong>We Build</strong>"</p>
+    <p class="lead">Robogenesis aims to establish an ecosystem of excellence at the intersection of AI and Robotics — empowering students to design, build, and deploy intelligent systems.</p>
+</section>
+
+<!-- PILLARS -->
+<section id="pillars" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Purpose & Strategic Pillars</h2>
+        <div class="pillars-container">
+            <div class="pillar-card" data-aos="zoom-in" data-aos-delay="50">
+                <h3>Cultivating Advanced AI-Centric Skills</h3>
+                <p>Machine perception, SLAM, intelligent manipulation, and sensor fusion.</p>
+            </div>
+            <div class="pillar-card" data-aos="zoom-in" data-aos-delay="150">
+                <h3>Driving Project-Based Innovation</h3>
+                <p>Mini-projects and semester-long major projects — learning by building.</p>
+            </div>
+            <div class="pillar-card" data-aos="zoom-in" data-aos-delay="250">
+                <h3>Bridging Academia & Industry</h3>
+                <p>Guest lectures, industrial visits and real-world problem alignment.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section id="objectives" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Aims & Objectives</h2>
+        <div class="accordion">
+            <div class="accordion-item">
+                <button class="accordion-header">1. Structured Educational Program</button>
+                <div class="accordion-body"><p>Weekly hands-on workshops from Python & ROS to deep learning for robotic perception and control.</p></div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-header">2. Ambitious Project Development</button>
+                <div class="accordion-body"><p>Monthly mini-projects and semester-long major projects that become portfolio pieces.</p></div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-header">3. Industry & Research Linkages</button>
+                <div class="accordion-body"><p>At least two industrial visits and two expert guest lectures per semester.</p></div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-header">4. Competitive Excellence</button>
+                <div class="accordion-body"><p>Prepare and sponsor teams for national & international competitions; run ideathons & hackathons.</p></div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-header">5. Community Outreach</button>
+                <div class="accordion-body"><p>Robo-Sparks outreach for local schools using accessible hardware kits.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Projects</h2>
+        <p class="lead"><em>Exciting AI & Robotics projects are under development. Revealing soon…</em></p>
+        <div class="projects-grid">
+            <div class="project-card" data-aos="fade-up" data-aos-delay="80"><h3>Project 1</h3><p>Coming Soon</p></div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="160"><h3>Project 2</h3><p>Coming Soon</p></div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="240"><h3>Project 3</h3><p>Coming Soon</p></div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="320"><h3>Project 4</h3><p>Coming Soon</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Events Gallery</h2>
+        <p class="lead">Explore our past events, workshops, and competitions</p>
+        <div class="events-grid">
+            <div class="event-card" data-aos="zoom-in" data-aos-delay="50">
+                <div class="event-image">
+                    <img src="https://placehold.co/400x300/0f1221/6ea8ff?text=Workshop+1" alt="Robotics Workshop">
+                    <div class="event-overlay">
+                        <button class="view-btn" onclick="openModal('https://placehold.co/400x300/0f1221/6ea8ff?text=Workshop+1')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="event-info">
+                    <h3>Intro to Robotics Workshop</h3>
+                    <p class="event-date">Revealing Soon</p>
+                    <p>Hands-on session on basic robotics principles and building simple robots.</p>
+                </div>
+            </div>
+            <div class="event-card" data-aos="zoom-in" data-aos-delay="150">
+                <div class="event-image">
+                    <img src="https://placehold.co/400x300/0f1221/6ea8ff?text=Competition" alt="AI Competition">
+                    <div class="event-overlay">
+                        <button class="view-btn" onclick="openModal('https://placehold.co/400x300/0f1221/6ea8ff?text=Competition')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="event-info">
+                    <h3>Annual AI Competition</h3>
+                    <p class="event-date">Revealing Soon</p>
+                    <p>Students competed to build the most innovative AI-powered solutions.</p>
+                </div>
+            </div>
+            <div class="event-card" data-aos="zoom-in" data-aos-delay="250">
+                <div class="event-image">
+                    <img src="https://placehold.co/400x300/0f1221/6ea8ff?text=Guest+Talk" alt="Guest Speaker">
+                    <div class="event-overlay">
+                        <button class="view-btn" onclick="openModal('https://placehold.co/400x300/0f1221/6ea8ff?text=Guest+Talk')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="event-info">
+                    <h3>Industry Expert Session</h3>
+                    <p class="event-date">Revealing Soon</p>
+                    <p>Guest lecture from leading AI researchers on future trends in robotics.</p>
+                </div>
+            </div>
+            <div class="event-card" data-aos="zoom-in" data-aos-delay="350">
+                <div class="event-image">
+                    <img src="https://placehold.co/400x300/0f1221/6ea8ff?text=Hackathon" alt="Robotics Hackathon">
+                    <div class="event-overlay">
+                        <button class="view-btn" onclick="openModal('https://placehold.co/400x300/0f1221/6ea8ff?text=Hackathon')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="event-info">
+                    <h3>48-Hour Robotics Hackathon</h3>
+                    <p class="event-date">Revealing Soon/p>
+                    <p>Teams worked through the night to create innovative robotics projects.</p>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a class="btn ghost" href="#">View All Events</a>
+        </div>
+    </div>
+</section>
+
+<!-- Modal for enlarged image view -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption"></div>
+</div>
+
+<!-- ROADMAP / TIMELINE -->
+<section id="roadmap" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Roadmap of Activities</h2>
+        <div class="timeline">
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="40">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Foundational & Recurring Activities</h3>
+                    <ul>
+                        <li>Orientation & Onboarding</li>
+                        <li>Weekly Build Sessions (ROS, CV, RL, sensor integration)</li>
+                        <li>Industrial Immersion & Robo-Sparks outreach</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="120">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Monthly Engagements & Project Sprints</h3>
+                    <p><em>Exciting details coming soon…</em></p>
+                </div>
+            </div>
+            <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h3>Flagship Semester Events</h3>
+                    <p><em>Major competitions and events will be revealed soon — stay tuned!</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Core Team</h2>
+        <p class="lead">Placeholders for 8 core members — replace with photos & names.</p>
+        <div class="team-grid">
+            <div class="team-card" data-aos="flip-left"> <img src="assests/images/vash.jpeg" alt="Core 1"><h4>Vansh Joshi</h4><p>President</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="80"> <img src="assests/images/ansh.jpeg" alt="Core 2"><h4>Ansh Upadhyay</h4><p>Vice President</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="160"> <img src="assests/images/akash.jpg" alt="Core 3"><h4>Akash Maurya</h4><p>Secretary</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="240"> <img src="assests/images/Priyanshi.jpeg" alt="Core 4"><h4>Priyanshi Goyal</h4><p>PR & Media</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="320"> <img src="assests/images/swarnim.jpg" alt="Core 5"><h4>Swarnim Chaudhary</h4><p>Treasurer & Research</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="400"> <img src="assests/images/utkrisht.jpeg" alt="Core 6"><h4>Utkrisht Suman</h4><p>PR & Media sub head</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="480"> <img src="assests/images/jiwak.jpeg" alt="Core 7"><h4>Jiwak Kumar</h4><p>Photography & Editor</p></div>
+            <div class="team-card" data-aos="flip-left" data-aos-delay="560"> <img src="assests/images/kshitij.png" alt="Core 8"><h4>Kshitij Dubey</h4><p>Event Co-ordinator</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- MEMBERSHIP -->
+<section id="membership" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Membership Policy</h2>
+        <p class="lead">Membership is exclusive to students enrolled in the School of Artificial Intelligence. Active membership capped at 40–45 students to ensure hands-on access to resources.</p>
+        <p>Application: Online form + short interview focused on enthusiasm and fit. Members must attend sessions, contribute to projects, and follow the club code of conduct.</p>
+        <a class="btn primary" href="application.php" target="_blank">Apply / Join</a>
+    </div>
+</section>
+
+<!-- CONTACT / RESOURCES / FOOTER -->
+<section id="contact" class="section" data-aos="fade-up">
+    <div class="container">
+        <h2>Contact & Resources</h2>
+        <p>Email: <a href="mailto:robogenesis@bennett.edu">robogenesis@bennett.edu</a></p>
+        <p>Instagram: <a href="https://instagram.com/robogenesis_soai" target="_blank">@robogenesis_soai</a></p>
+        <p>WhatsApp Group: <em>Link available upon request</em></p>
+        <hr style="margin:24px 0; border-color: rgba(255,255,255,.04)" />
+        <p style="color:var(--muted); font-size:.95rem">© <span id="year"></span> RoboGenesis, School of AI, Bennett University</p>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
+<script src="js/main.js" defer></script>
+<script>
+    window.addEventListener('load', () => AOS.init({ duration: 900, once: true }));
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<?php include 'includes/footer.php'; ?>
